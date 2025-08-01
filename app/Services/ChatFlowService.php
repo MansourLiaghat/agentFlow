@@ -10,25 +10,29 @@ class ChatFlowService
     {
         return ChatFlow::create($data);
     }
-    public function find(string $id): ?ChatFlow
+
+    public function find(string $chatFlowId): ?ChatFlow
     {
-        return ChatFlow::find($id);
+        return ChatFlow::find($chatFlowId);
     }
+
     public function findByApikey(string $apikey)
     {
         return ChatFlow::where('apikeyid', $apikey)->first();
     }
-    public function update(string $id, array $data): ?ChatFlow
+
+    public function update(string $chatFlowId, array $data): ?ChatFlow
     {
-        $chatFlow = ChatFlow::find($id);
+        $chatFlow = ChatFlow::find($chatFlowId);
         if (!$chatFlow) return null;
 
         $chatFlow->update($data);
         return $chatFlow;
     }
-    public function delete(string $id): bool
+
+    public function delete(string $chatFlowId): bool
     {
-        $chatFlow = ChatFlow::find($id);
+        $chatFlow = ChatFlow::find($chatFlowId);
         if (!$chatFlow) return false;
 
         $chatFlow->delete();
@@ -39,4 +43,5 @@ class ChatFlowService
     {
         return ChatFlow::all();
     }
+
 }

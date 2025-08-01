@@ -34,4 +34,10 @@ class ChatFlow extends Model
         'deployed' => 'boolean',
         'isPublic' => 'boolean',
     ];
+
+    public function nodes()
+    {
+        return $this->hasMany(Node::class, 'chat_flow_id', 'id');
+    }
+
 }
