@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ChatFlowController;
+use App\Http\Controllers\Api\documentStoreController;
 use App\Http\Controllers\Api\NodeController;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
@@ -31,3 +32,11 @@ Route::prefix('chatflows/{chatFlowId}/nodes')
     });
 
 
+Route::prefix('/document-store/store/')
+    ->withoutMiddleware([VerifyCsrfToken::class])->group(function () {
+        Route::POST('/', [DocumentStoreController::class, 'store']);
+        Route::GET('{id}', [DocumentStoreController::class, 'show']);
+        Route::GET('/', [DocumentStoreController::class, 'index']);
+        Route::PUT('{id}', [DocumentStoreController::class, 'update']);
+        Route::DELETE('{id}', [DocumentStoreController::class, 'delete']);
+    });
