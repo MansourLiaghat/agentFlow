@@ -8,26 +8,46 @@ use Illuminate\Support\Str;
 
 class DocumentStoreFileService
 {
-    public function uploadAndUpsert(array $data, $file): JsonResponse
+    public function uploadAndUpsert(array $data, $file): ?DocumentStoreFile
     {
-        $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
-        $filePath = $file->storeAs('document_store_files', $fileName);
 
-        var_dump($filePath);
-
-        if (!$filePath) {
-            return response()->json(['message' => 'File upload failed'], 500);
+        if (
+            !$file || !$file->isValid() ||
+            empty($data['document_store_id']) ||
+            empty($data['doc_id'])
+        ) {
+            return null;
         }
 
-        $data['file_path'] = $filePath;
+        try {
+            $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
+            $filePath = $file->storeAs('document_store_files', $fileName, 'public');
+        } catch (\Exception $e) {
+            return null;
+        }
 
-        $docFile = DocumentStoreFile::create($data);
 
-        return response()->json([
-            'message' => 'File uploaded and document stored',
-            'data' => $docFile,
-        ], 201);
+        return DocumentStoreFile::create([
+            'id' => Str::uuid(),
+            'document_store_id' => $data['document_store_id'],
+            'doc_id' => $data['doc_id'],
+            'original_name' => $file->getClientOriginalName(),
+            'mime_type' => $file->getClientMimeType(),
+            'file_size' => $file->getSize(),
+            'file_path' => $filePath,
+            'replace_existing' => $data['replace_existing'] ?? false,
+            'create_new_doc_store' => $data['create_new_doc_store'] ?? false,
+            'metadata' => $data['metadata'] ?? null,
+            'doc_store' => $data['doc_store'] ?? null,
+            'loader' => $data['loader'] ?? null,
+            'splitter' => $data['splitter'] ?? null,
+            'embedding' => $data['embedding'] ?? null,
+            'vector_store' => $data['vector_store'] ?? null,
+            'record_manager' => $data['record_manager'] ?? null,
+            'uploaded_by' => auth()->id(),
+        ]);
+
 
     }
-}
 
+}
