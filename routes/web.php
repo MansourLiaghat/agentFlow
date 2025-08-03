@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\Api\ChatFlowController;
-use App\Http\Controllers\Api\documentStoreController;
+use App\Http\Controllers\Api\DocumentStoreController;
+use App\Http\Controllers\Api\DocumentStoreFileController;
 use App\Http\Controllers\Api\NodeController;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
+
 
 Route::prefix('/chatflows')
     ->withoutMiddleware([VerifyCsrfToken::class])->group(function () {
@@ -17,14 +19,9 @@ Route::prefix('/chatflows')
     });
 
 
-Route::prefix('chatflows/nodes')
-    ->withoutMiddleware([VerifyCsrfToken::class])->group(function () {
-        Route::POST('/', [NodeController::class, 'store']);
-
-    });
-
 Route::prefix('chatflows/{chatFlowId}/nodes')
     ->withoutMiddleware([VerifyCsrfToken::class])->group(function () {
+        Route::POST('/', [NodeController::class, 'store']);
         Route::GET('{nodeId}', [NodeController::class, 'show']);
         Route::get('/', [NodeController::class, 'index']);
         Route::PUT('{nodeId}', [NodeController::class, 'update']);
@@ -39,4 +36,9 @@ Route::prefix('/document-store/store/')
         Route::GET('/', [DocumentStoreController::class, 'index']);
         Route::PUT('{id}', [DocumentStoreController::class, 'update']);
         Route::DELETE('{id}', [DocumentStoreController::class, 'delete']);
+    });
+
+Route::prefix('/document-store/upsert/')
+    ->withoutMiddleware([VerifyCsrfToken::class])->group(function () {
+Route::POST('{id}', [DocumentStoreFileController::class, 'upload']);
     });

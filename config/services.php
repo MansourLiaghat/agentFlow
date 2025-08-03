@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+
+    'flowise' => [
+        'base_url' => env('FLOWISE_API_BASE_URL', 'http://localhost:8000/api'),
+        'api_token' => env('FLOWISE_API_TOKEN'),
+    ],
+
 ];

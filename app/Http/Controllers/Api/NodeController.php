@@ -4,16 +4,17 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NodeRequest;
-use App\Models\ChatFlow;
-use App\Models\Node;
 use App\Services\NodeService;
 use Illuminate\Http\JsonResponse;
 
 class NodeController extends Controller
 {
-    public function store(NodeRequest $request, NodeService $service): JsonResponse
+    public function store(NodeRequest $request, NodeService $service , string $chatFlowId): JsonResponse
     {
-        $node = $service->createNode($request->validated());
+        $data = $request->validated();
+        $data['chat_flow_id'] = $chatFlowId;
+
+        $node = $service->createNode($data);
         return response()->json([
             'message' => 'Node created successfully',
             'data' => $node

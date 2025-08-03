@@ -27,5 +27,5 @@ class DocumentStore extends Model
         'vectorStoreConfig' => 'array',
         'embeddingConfig' => 'array',
         'recordManagerConfig' => 'array',
-    ]
+    ];
 }
